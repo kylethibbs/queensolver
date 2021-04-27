@@ -34,7 +34,7 @@ public class QueenSolver {
     // Handles the case when the spot is already filled (that's considered ok).
     public boolean isSafeToPutQueenHere(int hereR, int hereC){
 
-        if(board[hereC][hereR]==true){
+        if(board[hereR][hereC]==true){
             return true;
         }
 
