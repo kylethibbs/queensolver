@@ -8,17 +8,17 @@ public class QueenSolver {
     int nSolutions;
 
     public void clearBoard(){
-        for(int i = 0; i < board.length; i++){
-            for( int j = 0; j < board[1].length; j++){
-                board[i][j] = false;
+        for(int r = 0; r < board.length; r++){
+            for( int c = 0; c < board[1].length; c++){
+                board[r][c] = false;
             }
         }
     }
 
     public void printBoard() { 
-        for(int i = 0; i < board.length; i++){
-            for( int j = 0; j < board[1].length; j++){
-                if (board[i][j] == true){
+        for(int r = 0; r < board.length; r++){
+            for( int c = 0; c < board[1].length; c++){
+                if (board[r][c] == true){
                     System.out.print(" X ");
                 }
                 else{
@@ -33,16 +33,21 @@ public class QueenSolver {
     // Returns true if ok to put queen in given spot.
     // Handles the case when the spot is already filled (that's considered ok).
     public boolean isSafeToPutQueenHere(int hereR, int hereC){
+
+        if(board[hereC][hereR]==true){
+            return true;
+        }
+
         boolean safe = true;
 
-        for(int i = 0; i < board.length; i++){
-            if(board[i][hereC]==true){
+        for(int r = 0; r < board.length; r++){
+            if(board[r][hereC]==true){
                 safe = false;
             }
         }
 
-        for(int i = 0; i < board[1].length; i++){
-            if(board[hereR][i]==true){
+        for(int c = 0; c < board[1].length; c++){
+            if(board[hereR][c]==true){
                 safe = false;
             }
         }
@@ -50,9 +55,6 @@ public class QueenSolver {
         int tempC = hereC;
         int tempR = hereR;
         while(tempC >= 0 && tempR >= 0){
-            System.out.println(tempC);
-            System.out.println(tempR);
-
             if(board[tempR][tempC]==true){
                 safe = false;
             }
@@ -63,9 +65,6 @@ public class QueenSolver {
         tempC = hereC;
         tempR = hereR;
         while(tempC <= board[1].length-1 && tempR <= board.length-1){
-            System.out.println(tempC);
-            System.out.println(tempR);
-
             if(board[tempR][tempC]==true){
                 safe = false;
             }
@@ -73,10 +72,39 @@ public class QueenSolver {
             tempR++;
         }
 
+        tempC = hereC;
+        tempR = hereR;
+        while(tempC >= 0 && tempR <= board.length-1){
+            if(board[tempR][tempC]==true){
+                safe = false;
+            }
+            tempC--;
+            tempR++;
+        }
+
+        tempC = hereC;
+        tempR = hereR;
+        while(tempC <= board[1].length-1 && tempR >= 0){
+            System.out.print(tempC);
+            System.out.print(tempR);
+            if(board[tempR][tempC]==true){
+                safe = false;
+            }
+            tempC++;
+            tempR--;
+        }
+
         return safe;
     }
 
     public void solveByBruteForce() {
+        for(int r = 0; r < board.length; r++){
+            for( int c= 0; c < board[1].length; c++){
+                if(isSafeToPutQueenHere(r, c)){
+                    board[r][c]=true;
+                }
+            }
+        }
     }
 
     public void solveByBruteForcePruning() {
@@ -107,7 +135,7 @@ public class QueenSolver {
         solver.clearBoard();
         System.out.println(solver.isSafeToPutQueenHere(4,4) == true ? "1 Passed" : "1 Failed");
         solver.board[4][4] = true;
-        System.out.println(solver.isSafeToPutQueenHere(4,4) == false ? "2 Passed" : "2 Failed");
+        System.out.println(solver.isSafeToPutQueenHere(4,4) == true ? "2 Passed" : "2 Failed");
         System.out.println(solver.isSafeToPutQueenHere(1,1) == false ? "3 Passed" : "3 Failed");
         System.out.println(solver.isSafeToPutQueenHere(4,0) == false ? "4 Passed" : "4 Failed");
         System.out.println(solver.isSafeToPutQueenHere(0,4) == false ? "5 Passed" : "5 Failed");
@@ -120,6 +148,7 @@ public class QueenSolver {
         System.out.println("Brute force without pruning:");
         solver.clearBoard();
         solver.solveByBruteForce();
+        solver.printBoard();
         System.out.println("Numbers spots that were checked if safe for a queen: " +
                 solver.nSafeSpotsConsidered);
         System.out.println("Numbers of solutions: " +
